@@ -40,7 +40,20 @@ void ATPPowerArmorFurniture::BeginPlay()
 
 bool ATPPowerArmorFurniture::ServerPowerArmorEnter_Validate(ATPCharacter* Character, APlayerController* PC)
 {
-	return !Character->bInPowerArmor && Occupant == nullptr; // TODO: Check distance to requested Actor
+	if (Character->bInPowerArmor || Occupant != nullptr)
+	{
+		return false;
+	}
+
+	float Distance = this->GetDistanceTo(Character);
+
+	if (Distance <= (SphereComp->GetScaledSphereRadius() + 128.0f))
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 void ATPPowerArmorFurniture::ServerPowerArmorEnter_Implementation(ATPCharacter* Character, APlayerController* PC)
 {
